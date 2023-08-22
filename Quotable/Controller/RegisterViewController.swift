@@ -1,101 +1,129 @@
 //
-//  ViewController.swift
+//  RegisterViewController.swift
 //  Quotable
 //
-//  Created by Dinesh Sharma on 09/08/23.
+//  Created by Dinesh Sharma on 21/08/23.
 //
 
 import UIKit
+import FirebaseCore
+import FirebaseAuth
 
 class RegisterViewController: UIViewController {
     
-    var currentCode: String = ""
-    var currentCountry: Country?
+    
+    @IBOutlet weak var textPassword: UITextField!
+    @IBOutlet weak var textEmail: UITextField!
     
     @IBOutlet weak var btnNext: UIButton!
-    @IBOutlet weak var textMobileNo: UITextField!
-    @IBOutlet weak var btnChangeCountry: UIButton!
-    @IBOutlet weak var imgFlag: UIImageView!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let locale = Locale.current
-        if #available(iOS 16, *) {
-            if let cc = locale.language.region {
-                currentCode = "\(cc.identifier)"
-            }
-        } else {
-            if let cc = locale.regionCode {
-                currentCode = "\(cc)"
-            }
-        }
-        fetchCurrentCountryDetails() {result in
-            switch(result) {
-            case .success(let country):
-                self.currentCountry = country
-                if let cc = self.currentCountry {
-                    APIClient.urlToImage(URL(string: cc.flags.png)!) { result in
-                        switch result {
-                        case .success(let img):
-                            DispatchQueue.main.async {
-                                self.imgFlag.image = img
-                            }
-                            break;
-                        case .failure(let err):
-                            print("error in parsing image from URL: \(err)")
-                        }
-                    }
-                    DispatchQueue.main.async {
-                        self.btnChangeCountry.setTitle(" \(cc.name.common) \(cc.idd.root)\(cc.idd.suffixes.first ?? "") \u{25BC}", for: .normal)
-                    }
-                    
-                }
-                break;
-            case .failure(let err):
-                print("error in fetching current country: \(err)")
+        
+        Auth.auth().addStateDidChangeListener { auth, user in
+            if let _ = user {
+                self.performSegue(withIdentifier: "toHomeVC", sender: self)
             }
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(handleCountrySelection(_:)), name: Notification.Name(rawValue: countrySelectedNotification), object: nil)
+        
+        textEmail.delegate = self
+        textPassword.delegate = self
+
+        // Do any additional setup after loading the view.
+        checkFields()
     }
     
-    @objc func handleCountrySelection(_ notification: Notification) {
-        if let selectedCountry = notification.object as? CountrySelected {
-            imgFlag.image = selectedCountry.flag
-            btnChangeCountry.setTitle(" \(selectedCountry.name) \(selectedCountry.code) \u{25BC}", for: .normal)
-        }
+    
+    
+
+    override func viewWillAppear(_ animated: Bool) {
+        
     }
 
     @IBAction func btnNextTapped(_ sender: Any) {
-    }
-    
-    @IBAction func btnChangeCountryTapped(_ sender: Any) {
         
-        let selectVC = storyboard?.instantiateViewController(withIdentifier: "selectCountryVC") as! SelectCountryViewController
-        
-        selectVC.modalPresentationStyle = .overCurrentContext
-        
-        present(selectVC, animated: false)
-        
-        
-    }
-    
-    func fetchCurrentCountryDetails(_ completion: @escaping (Result<Country, Error>) -> Void) {
-        APIClient.fetchData() { result in
-            switch result{
-            case .success(let countries):
-                for country in countries {
-                    if(country.altSpellings.first == self.currentCode) {
-                        completion(.success(country))
+        if let email = textEmail.text, let password = textPassword.text {
+            if(isValidEmail(email)) {
+                
+                Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+                  guard let strongSelf = self else { return }
+                    
+                    if let _ = authResult {
+                        print("sign in successfull")
+                        strongSelf.performSegue(withIdentifier: "toHomeVC", sender: self)
                     }
                 }
-                break;
-            case .failure(let err):
-                completion(.failure(err))
-                print("some error occured while fetching data from API : \(err)")
+                
+                let signUpThread = Thread {
+                    sleep(1)
+                    Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+                        if let error = error {
+                            print("some error occured in creating user: \(error)")
+                            self.showAlert(error.localizedDescription)
+                            return;
+                        }
+                        
+                        // but before, we want to verify email of the user
+                        
+                        Auth.auth().currentUser?.sendEmailVerification { error in
+                            if let error = error {
+                                self.showAlert(error.localizedDescription)
+                                return;
+                            }
+                        }
+                        
+                        self.showAlert("Verification Email has been successfully sent!\n Verify & Login")
+                    }
+                }
+                
+                signUpThread.start()
+                
+                
+                
+                
+                
+            } else {
+                showAlert("Please Enter a Valid Email")
+                return;
             }
         }
+        
+        
+    }
+    
+    private func checkFields() {
+        if let email = textEmail.text, let pass = textPassword.text {
+            btnNext.isEnabled = !email.isEmpty && !pass.isEmpty
+        } else {
+            btnNext.isEnabled = false
+        }
+    }
+    
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailPredicate.evaluate(with: email)
+    }
+    
+    private func showAlert(_ message: String) {
+        let alert = UIAlertController(title: "Quotable", message: message, preferredStyle: .actionSheet)
+        let okBtn = UIAlertAction(title: "OK", style: .default) { action in
+            alert.dismiss(animated: true)
+        }
+        alert.addAction(okBtn)
+        alert.preferredAction = okBtn
+        present(alert, animated: true)
     }
 }
 
+extension RegisterViewController: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        checkFields()
+        
+        return true;
+    }
+    
+}
