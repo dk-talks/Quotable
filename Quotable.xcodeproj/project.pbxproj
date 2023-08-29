@@ -7,10 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B82BD632A9DBED000057035 /* ImageClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B82BD622A9DBED000057035 /* ImageClient.swift */; };
+		1BF0F74C2A971B9E00C45FFE /* QuoteImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF0F74B2A971B9E00C45FFE /* QuoteImage.swift */; };
 		1F0702C42A9289E900AF3642 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F0702C32A9289E900AF3642 /* GoogleService-Info.plist */; };
 		1F2A0BBB2A93322500136436 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2A0BBA2A93322500136436 /* RegisterViewController.swift */; };
 		1F2B179E2A9481D00061AE0A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B179D2A9481D00061AE0A /* HomeViewController.swift */; };
 		1F2B17A02A94B8F60061AE0A /* photoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B179F2A94B8F60061AE0A /* photoCollectionViewCell.swift */; };
+		1F3B855E2A952FDC009B810E /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3B855D2A952FDC009B810E /* Quote.swift */; };
 		1F7050B82A8CACE300A3A82F /* GlobalObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7050B72A8CACE300A3A82F /* GlobalObjects.swift */; };
 		1FA8EE092A930BDA007E5478 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 1FA8EE082A930BDA007E5478 /* FirebaseAuth */; };
 		1FA8EE0B2A930BDA007E5478 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1FA8EE0A2A930BDA007E5478 /* FirebaseFirestore */; };
@@ -27,11 +30,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B82BD622A9DBED000057035 /* ImageClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageClient.swift; sourceTree = "<group>"; };
+		1BF0F74B2A971B9E00C45FFE /* QuoteImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteImage.swift; sourceTree = "<group>"; };
 		1F0702C32A9289E900AF3642 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1F0702C52A9289EF00AF3642 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1F2A0BBA2A93322500136436 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		1F2B179D2A9481D00061AE0A /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		1F2B179F2A94B8F60061AE0A /* photoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = photoCollectionViewCell.swift; sourceTree = "<group>"; };
+		1F3B855D2A952FDC009B810E /* Quote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quote.swift; sourceTree = "<group>"; };
 		1F7050B72A8CACE300A3A82F /* GlobalObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalObjects.swift; sourceTree = "<group>"; };
 		1FA8EE0C2A930FCB007E5478 /* Quotable.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quotable.entitlements; sourceTree = "<group>"; };
 		B520D7CB2A83F761002D9EE7 /* Quotable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Quotable.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,6 +67,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B82BD602A9DBE5F00057035 /* Data Models */ = {
+			isa = PBXGroup;
+			children = (
+				1F3B855D2A952FDC009B810E /* Quote.swift */,
+				B52CA25C2A87A7C10020F33C /* Country.swift */,
+				1BF0F74B2A971B9E00C45FFE /* QuoteImage.swift */,
+			);
+			path = "Data Models";
+			sourceTree = "<group>";
+		};
+		1B82BD612A9DBE7C00057035 /* Business Logic */ = {
+			isa = PBXGroup;
+			children = (
+				B52CA2612A87B1E30020F33C /* APIClient.swift */,
+				1B82BD622A9DBED000057035 /* ImageClient.swift */,
+			);
+			path = "Business Logic";
+			sourceTree = "<group>";
+		};
 		B520D7C22A83F761002D9EE7 = {
 			isa = PBXGroup;
 			children = (
@@ -119,8 +144,8 @@
 		B52CA25B2A87A79F0020F33C /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				B52CA25C2A87A7C10020F33C /* Country.swift */,
-				B52CA2612A87B1E30020F33C /* APIClient.swift */,
+				1B82BD612A9DBE7C00057035 /* Business Logic */,
+				1B82BD602A9DBE5F00057035 /* Data Models */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -214,9 +239,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F2B17A02A94B8F60061AE0A /* photoCollectionViewCell.swift in Sources */,
+				1BF0F74C2A971B9E00C45FFE /* QuoteImage.swift in Sources */,
 				1F2A0BBB2A93322500136436 /* RegisterViewController.swift in Sources */,
 				B52CA2622A87B1E30020F33C /* APIClient.swift in Sources */,
 				1F7050B82A8CACE300A3A82F /* GlobalObjects.swift in Sources */,
+				1F3B855E2A952FDC009B810E /* Quote.swift in Sources */,
+				1B82BD632A9DBED000057035 /* ImageClient.swift in Sources */,
 				B52CA2602A87ADBB0020F33C /* CountryTableViewCell.swift in Sources */,
 				B520D7D32A83F761002D9EE7 /* RegisterViewController1.swift in Sources */,
 				1F2B179E2A9481D00061AE0A /* HomeViewController.swift in Sources */,
